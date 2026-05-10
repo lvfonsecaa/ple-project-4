@@ -1,7 +1,6 @@
 module Interpreter
 
 import AST;
-import IO;
 import String;
 
 data Value
