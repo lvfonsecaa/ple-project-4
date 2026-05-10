@@ -1,0 +1,16 @@
+defmodule Demo
+
+defspace Score end
+
+defvalue one : Int = 1 end
+defvalue two : Int = 2 end
+defvalue three : Int = 3 end
+defvalue truth : Bool = true end
+defvalue letter : Char = @A end
+defvalue word : String = "hola" end
+
+defdata bag : Set[Int] = {one, two, three} end
+
+defexpression ((one + two) * three = 9) and truth end
+
+end

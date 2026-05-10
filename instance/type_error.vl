@@ -1,0 +1,9 @@
+defmodule Broken
+
+defvalue one : Int = 1 end
+defvalue truth : Bool = true end
+defdata bad : Set[Int] = {one, missing} end
+
+defexpression one + truth end
+
+end

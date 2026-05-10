@@ -1,0 +1,21 @@
+defmodule AdvancedSet
+using List
+
+defspace Set end
+defspace SubSet < Set end
+defspace Element end
+
+defoperator union : Set -> Set -> Set [assoc:left commutative] end
+defoperator intersect : Set -> Set -> Set end
+defoperator contains : Element -> Set -> Bool end
+
+defvar x: Set, y: Set, z: Set, a: Element, b: Element end
+
+defrule (union x y) -> (union y x) end
+defrule (intersect x y) -> (intersect y x) end
+defrule (union (union x y) z) -> (union x (union y z)) end
+
+defexpression forall e in Element . 
+    ( (e = e) and (e <> e or e = e) ) === (e = e) end
+
+end

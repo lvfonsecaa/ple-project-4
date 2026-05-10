@@ -1,0 +1,8 @@
+defmodule Set
+using List
+defspace Set < SuperSet end
+defoperator union : Set -> Set -> Set [aaaa b:a] end
+defvar psssasdsds: Bool, qasdskdsdnskd: Bool end
+defrule (b p s) -> (a q p) end
+defexpression forall xkkkkkkk in Elementaaaaa . snh = xsass end
+end
