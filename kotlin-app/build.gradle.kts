@@ -6,6 +6,10 @@ plugins {
     kotlin("plugin.serialization") version "1.9.22"
 }
 
+kotlin {
+    jvmToolchain(21)
+}
+
 // TODO: cambia "milang" por el nombre de tu lenguaje (en minúsculas, sin espacios)
 group = "milang"
 version = "1.0.0"
