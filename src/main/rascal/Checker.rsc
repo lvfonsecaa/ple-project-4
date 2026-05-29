@@ -20,7 +20,7 @@ bool sameType(typeDef(a), typeDef(b)) = a == b;
 bool sameType(setTypeDef(a), setTypeDef(b)) = sameType(a, b);
 default bool sameType(Type _, Type _) = false;
 
-bool checkModule(moduleDef(_, _, defs)) {
+bool checkModule(AST::moduleDef(_, _, defs)) {
   TypeEnv env = ();
   bool ok = true;
 

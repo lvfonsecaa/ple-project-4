@@ -16,7 +16,7 @@ str showValue(boolV(b)) = "<b>";
 str showValue(charV(c)) = c;
 str showValue(stringV(s)) = s;
 
-Value evalModule(moduleDef(_, _, defs)) {
+Value evalModule(AST::moduleDef(_, _, defs)) {
   Env env = ();
   Value result = boolV(false);
 

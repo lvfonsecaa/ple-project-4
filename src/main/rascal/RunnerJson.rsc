@@ -1,12 +1,13 @@
 // TODO: cambia "milang" por el nombre del módulo de tu lenguaje (debe coincidir con la carpeta en src/)
-module milang::RunnerJson
+//se hizo directamente porque el proyecto está organizado de otra manera
+module RunnerJson
 
 // TODO: importa los modulos de tu propio lenguaje
 // ejemplo (ajusta los nombres según los tuyos):
-import milang::Syntax;
-import milang::AST;
-import milang::Parser;       // o como hayas llamado al modulo con buildModule / buildAST
-import milang::Interpreter;  // o el modulo que tenga tu función de ejecución
+import Syntax;
+import AST;
+import Checker; // o el modulo que tenga tu función de type checking
+import Interpreter;  // o el modulo que tenga tu función de ejecución
 import ParseTree;
 import Message;
 import IO;
@@ -63,7 +64,7 @@ void main(list[str] args) {
         loc file = isEmpty(args)
             // archivo por defecto para pruebas rápidas desde Rascal directamente
             // TODO: ajusta la ruta de prueba
-            ? |project://mi-proyecto/tests/ejemplo.ml|
+            ? |cwd:///instance/demo.vl|
             : (startsWith(args[0], "/") ? |file:///| + args[0] : |cwd:///| + args[0]);
         src = readFile(file);
     } catch e: {
@@ -76,7 +77,7 @@ void main(list[str] args) {
     // Ejemplo: parse(#start[Program], src) si tu símbolo inicial es "Program"
     Tree cst;
     try {
-        cst = resolveAmb(parse(#start[Program], src, allowAmbiguity=true));
+        cst = parse(#start[Module], src).top;
     } catch ParseError(loc at): {
         println(jsonResult(false, "", false, false, false, [], [], [], "Error de parsing en <at>", "", ""));
         return;
@@ -87,9 +88,9 @@ void main(list[str] args) {
 
     // Construcción del AST
     // TODO: reemplaza "AProgram" y "buildProgram" por los tipos y funciones de tu AST
-    AProgram ast;
+    AST::Module ast;
     try {
-        ast = buildProgram(cst.top);
+        ast = implode(#AST::Module, cst);
     } catch e: {
         println(jsonResult(false, "", true, false, false, [], [], [], "Error construyendo AST: <e>", "", ""));
         return;
@@ -103,6 +104,15 @@ void main(list[str] args) {
     //Verificación semántica
     list[str] semErrs = [];
     bool semOk = true;
+    list[str] tcErrs = [];
+    bool tcOk = true;
+    str modName = "programa";
+    str resumen = "";
+
+    if (AST::moduleDef(name, imports, defs) := ast) {
+        modName = name;
+        resumen = "Módulo: <name>\\nImports: <size(imports)>\\nDefiniciones: <size(defs)>";
+    }
 
     // Ejemplo si tienes checkProgram(ast) que devuelve set[Message]:
     // set[Message] semMsgs = checkProgram(ast);
@@ -113,20 +123,35 @@ void main(list[str] args) {
     //     return;
     // }
 
+    try {
+        tcOk = checkModule(ast);
+    } catch e: {
+        tcOk = false;
+        tcErrs = ["Error en type checking: <e>"];
+    }
+
+    if (!tcOk) {
+        if (isEmpty(tcErrs)) {
+            tcErrs = ["El checker reportó errores de tipos."];
+        }
+        println(jsonResult(false, modName, true, false, semOk, tcErrs, semErrs, [], "", codigoFormateado, resumen));
+        return;
+    }
+
     // ejecución
     // TODO: reemplaza "runProgram" por la función de tu intérprete
     // La función debe devolver list[str] con las líneas de salida
     list[str] output = [];
     try {
-        output = runProgram(ast);
+        output = ["Result: <showValue(evalModule(ast))>"];
     } catch str errMsg: {
-        println(jsonResult(false, "programa", true, true, true, [], [], [], "Error en ejecución: <errMsg>", codigoFormateado, ""));
+        println(jsonResult(false, modName, true, true, semOk, [], semErrs, [], "Error en ejecución: <errMsg>", codigoFormateado, resumen));
         return;
     } catch e: {
-        println(jsonResult(false, "programa", true, true, true, [], [], [], "Error en ejecución: <e>", codigoFormateado, ""));
+        println(jsonResult(false, modName, true, true, semOk, [], semErrs, [], "Error en ejecución: <e>", codigoFormateado, resumen));
         return;
     }
 
     //Todo OK
-    println(jsonResult(true, "programa", true, true, true, [], [], output, "", codigoFormateado, ""));
+    println(jsonResult(true, modName, true, tcOk, semOk, tcErrs, semErrs, output, "", codigoFormateado, resumen));
 }
