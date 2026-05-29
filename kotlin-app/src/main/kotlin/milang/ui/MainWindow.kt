@@ -43,7 +43,7 @@ fun MainWindow() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // TODO: cambia el título por el nombre de tu lenguaje
-        Text("Mi Lenguaje — Runner", color = text, fontSize = 22.sp)
+        Text("VeriLang Runner", color = text, fontSize = 22.sp)
 
         // Fila superior: campo de ruta, botón de seleccionar archivo, botón de correr
         Row(
@@ -54,7 +54,7 @@ fun MainWindow() {
                 value = filePath,
                 onValueChange = { filePath = it },
                 // TODO: actualiza la etiqueta con la extensión de tu lenguaje (ej. "archivo .ml")
-                label = { Text("Ruta del archivo fuente", color = Color.Gray) },
+                label = { Text("Ruta del archivo VeriLang", color = Color.Gray) },
                 modifier = Modifier.weight(1f),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
@@ -68,7 +68,7 @@ fun MainWindow() {
                 onClick = {
                     val chooser = JFileChooser().apply {
                         // TODO: cambia "ml" y la descripción por la extensión de tu lenguaje
-                        fileFilter = FileNameExtensionFilter("Archivos de Mi Lenguaje (*.ml)", "ml")
+                        fileFilter = FileNameExtensionFilter("Archivos VeriLang (*.vl, *.vlg)", "vl", "vlg")
                         currentDirectory = File(System.getProperty("user.home"))
                     }
                     if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
