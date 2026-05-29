@@ -15,9 +15,8 @@ import java.util.concurrent.TimeUnit
  *
  *   tu-proyecto/
  *   ├── rascal-shell-stable.jar   #el jar de Rascal
- *   ├── src/                      #tu código Rascal (módulos .rsc)
- *   │   └── milang/
- *   │       └── RunnerJson.rsc    #punto de entrada Rascal
+ *   ├── src/main/rascal/          #tu código Rascal (módulos .rsc)
+ *   │   └── RunnerJson.rsc        #punto de entrada Rascal
  *   └── kotlin-app/               #esta app
  *       └── ...
  *
@@ -40,7 +39,7 @@ class LangService {
     }
 
     private val rascalJar: File get() = projectRoot.resolve("rascal-shell-stable.jar")
-    private val srcDir: File get() = projectRoot.resolve("src")
+    private val srcDir: File get() = projectRoot.resolve("src/main/rascal")
 
     
     //recibe la ruta absoluta del archivo fuente y devuelve el RunResult
@@ -81,16 +80,16 @@ class LangService {
         val cmd = listOf(
             "java",
             "-Dfile.encoding=UTF-8",
-            "-Drascal.projectPath=${srcDir.absolutePath}",
+            "-Drascal.projectPath=${projectRoot.absolutePath}",
             "-jar", rascalJar.absolutePath,
             // TODO: cambia "milang::RunnerJson" por el módulo Rascal de tu lenguaje
             // El formato es "nombrePaquete::NombreModulo" (ej. "miprog::RunnerJson")
-            "milang::RunnerJson",
+            "RunnerJson",
             filePath
         )
 
         val process = ProcessBuilder(cmd)
-            .directory(srcDir)
+            .directory(projectRoot)
             .redirectErrorStream(false)
             .start()
         process.outputStream.close()
