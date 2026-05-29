@@ -31,7 +31,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             // TODO: cambia el packageName por el nombre de tu lenguaje
-            packageName = "MiLang"
+            packageName = "VeriLang"
             packageVersion = "1.0.0"
         }
     }

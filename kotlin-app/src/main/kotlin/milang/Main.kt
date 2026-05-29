@@ -11,7 +11,7 @@ fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
         // TODO: cambia el título de la ventana por el nombre de tu lenguaje
-        title = "Mi Lenguaje",
+        title = "VeriLang",
         state = rememberWindowState(width = 800.dp, height = 600.dp)
     ) {
         MainWindow()
